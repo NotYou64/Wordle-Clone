@@ -382,7 +382,6 @@ sheet
 fault
 apart
 other
-False
 thick
 noise
 cycle
@@ -615,7 +614,6 @@ glove
 globe
 grain
 beast
-ma'am
 rifle
 curve
 patch
