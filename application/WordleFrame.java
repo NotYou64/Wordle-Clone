@@ -104,7 +104,7 @@ public class WordleFrame extends JFrame
         {
             for (int j = 0; j < grid[0].length; j++)
             {
-                grid[i][j] = new JLabel(Integer.toString(i*6 + j));
+                grid[i][j] = new JLabel();
                 grid[i][j].setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
                 grid[i][j].setHorizontalAlignment(JLabel.CENTER);
                 grid[i][j].setBorder(letter_border);

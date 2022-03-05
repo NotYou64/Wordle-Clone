@@ -7,15 +7,44 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class WordleEventHandler implements ActionListener, KeyListener
 {
 
     WordleFrame in;
+    ArrayList<String> dict = new ArrayList<>();
+    Scanner dict_scanner;
+    File dict_file;
 
     public WordleEventHandler(WordleFrame in)
     {
 
+        // take wordle object in to modify its components
         this.in = in;
+
+        // put each word from the dictionary in the src file into an array
+        try
+        {
+            dict_file = new File(".\\src\\dictionary.txt");
+            dict_scanner = new Scanner(dict_file);
+            while (dict_scanner.hasNextLine())
+            {
+                dict.add(dict_scanner.nextLine());
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            // ignore error
+            // TODO: decide if error should be dealt with
+        }
+        finally
+        {
+            dict_scanner.close();
+        }
 
     }
 
