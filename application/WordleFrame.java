@@ -1,8 +1,9 @@
 // Cole Delong
-// testing out Swing
+// window for Wordle clone
 // 3-4-22
 
 
+// imports
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,28 +13,49 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 
 
 public class WordleFrame extends JFrame
 {
 
-    // instance variables
+    // event handler object
     WordleEventHandler event_handler = new WordleEventHandler(this);
 
-    GridLayout layout = new GridLayout(2, 1);
+    // rectangle object to contain the window dimensions
+    Rectangle dimensions;
 
-    GridLayout layout1 = new GridLayout(6, 5);
-    Border border1 = BorderFactory.createEmptyBorder(20, 20, 10, -50);
+    // grid layouts
+    BorderLayout layout = new BorderLayout();
+    FlowLayout layout0 = new FlowLayout(FlowLayout.CENTER);
+    GridLayout layout1 = new GridLayout(6, 5, 10, 10);
+    FlowLayout layout2 = new FlowLayout(FlowLayout.CENTER, 10, 10);
+    
+    // borders
+    Border border0;
+    Border border1;
+    Border border2;
+    Border letter_border;
+
+    // jpanels
+    JPanel row0 = new JPanel();
     JPanel row1 = new JPanel();
+    JPanel row2 = new JPanel();
+    
+    // top jpanel: title
+    JLabel title = new JLabel();
+
+    // middle jpanel: guess grid
     JLabel[][] grid = new JLabel[5][6];
 
-    FlowLayout layout2 = new FlowLayout(FlowLayout.CENTER, 10, 10);
-    JPanel row2 = new JPanel();
+    // bottom jpanel: inputs
     JTextField input_field = new JTextField(6);
-    JButton submit_button = new JButton("Guess");
+    JButton submit_button = new JButton();
 
 
     // frame constructor
@@ -42,44 +64,69 @@ public class WordleFrame extends JFrame
 
         // initialize window
         super();
-        setTitle("Wordle");
-        setLookAndFeel();
-        setSize(500, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setTitle("   Wordle");
+        setLookAndFeel();
+        setSize(400, 550);
 
-        // set up window layout
+        // window dimensions
+        dimensions = this.getBounds();
+
+        // layouts
         setLayout(layout);
-
-
-        // create row1, the grid for the past guesses to be shown
+        row0.setLayout(layout0);
         row1.setLayout(layout1);
-        row1.setBorder(border1);
-        row1.setBackground(Color.white);
+        row2.setLayout(layout2);
 
+        // borders
+        border0 = BorderFactory.createEmptyBorder(10, 0, 10, 0);
+        border1 = BorderFactory.createEmptyBorder(10, dimensions.width/12, 5, dimensions.width/12);
+        border2 = BorderFactory.createEmptyBorder(10, 0, 20, 0);
+        letter_border = BorderFactory.createLineBorder(new Color(150, 150, 150));
+        row0.setBorder(border0);
+        row1.setBorder(border1);
+        row2.setBorder(border2);
+
+        // backgrounds
+        row0.setBackground(Color.white);
+        row1.setBackground(Color.white);
+        row2.setBackground(Color.white);
+
+
+        // top jpanel: title
+        title.setText("Wordle");
+        title.setFont(new Font("Trebuchet MS", Font.BOLD, 30));
+        row0.add(title);
+
+        // middle jpanel: guess grid
         for (int i = 0; i < grid.length; i++)
         {
             for (int j = 0; j < grid[0].length; j++)
             {
                 grid[i][j] = new JLabel(Integer.toString(i*6 + j));
+                grid[i][j].setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
+                grid[i][j].setBorder(letter_border);
+                grid[i][j].setHorizontalAlignment(JLabel.CENTER);
                 row1.add(grid[i][j]);
             }
 
         }
-        
 
-        // create the area for the guesses to be made
-        row2.setLayout(layout2);
-        row2.setBackground(Color.white);
-
+        // bottom jpanel: inputs
         input_field.addKeyListener(event_handler);
-        row2.add(input_field);
+        input_field.setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
         submit_button.addActionListener(event_handler);
+        submit_button.setText("Guess");
+        submit_button.setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
+        row2.add(input_field);
         row2.add(submit_button);        
 
-        // add the panels to the window
-        add(row1);
-        add(row2);
+
+        // add panels to window
+        add(row0, BorderLayout.NORTH);
+        add(row1, BorderLayout.CENTER);
+        add(row2, BorderLayout.SOUTH);
 
         // make the window visible
         setVisible(true);

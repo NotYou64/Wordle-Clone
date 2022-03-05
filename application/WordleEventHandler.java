@@ -1,5 +1,5 @@
 // Cole Delong
-// event handler for Wordle clone application
+// event handler for Wordle clone
 // 3-5-22
 
 import java.awt.event.ActionEvent;
@@ -25,8 +25,7 @@ public class WordleEventHandler implements ActionListener, KeyListener
     {
 
         // use getSource() to find out which object the action was from
-
-        event.getSource();
+        System.out.println("Button pressed");
 
     }
 
