@@ -4,7 +4,13 @@
 
 
 // imports
-import javax.swing.border.Border;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,13 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
+import javax.swing.border.Border;
 
 
 public class WordleFrame extends JFrame
@@ -106,8 +106,8 @@ public class WordleFrame extends JFrame
             {
                 grid[i][j] = new JLabel(Integer.toString(i*6 + j));
                 grid[i][j].setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
-                grid[i][j].setBorder(letter_border);
                 grid[i][j].setHorizontalAlignment(JLabel.CENTER);
+                grid[i][j].setBorder(letter_border);
                 row1.add(grid[i][j]);
             }
 
