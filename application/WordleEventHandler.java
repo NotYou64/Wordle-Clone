@@ -15,13 +15,17 @@ import java.util.Scanner;
 public class WordleEventHandler implements ActionListener, KeyListener
 {
 
+    // window object
     WordleFrame in;
+
+    // game variables
     ArrayList<String> objective_list = new ArrayList<>();
     ArrayList<String> valid_words = new ArrayList<>();
     Scanner file_scanner;
     File obj_file;
-
     int nguess = 0;
+    boolean game_state = true;
+    String wordle;
 
     public WordleEventHandler(WordleFrame in)
     {
@@ -29,10 +33,12 @@ public class WordleEventHandler implements ActionListener, KeyListener
         // take wordle object in to modify its components
         this.in = in;
 
-        // put each word from the objective_list in the src file into an array
+        System.out.println(new File(".").getAbsolutePath());
+
+        // put each word from the objective_list in the src folder into an array
         try
         {
-            obj_file = new File(".\\src\\objective_list.txt");
+            obj_file = new File("C:\\Users\\cole4\\Desktop\\Java\\Wordle\\wordle_copy\\application\\objective_list.txt");
             file_scanner = new Scanner(obj_file);
             while (file_scanner.hasNextLine())
             {
@@ -41,13 +47,13 @@ public class WordleEventHandler implements ActionListener, KeyListener
         }
         catch (FileNotFoundException e)
         {
-            
+
         }
         
-        // put each word from the valid_words in the src file into an array
+        // put each word from the valid_words in the src folder into an array
         try
         {
-            obj_file = new File(".\\src\\valid_words.txt");
+            obj_file = new File("C:\\Users\\cole4\\Desktop\\Java\\Wordle\\wordle_copy\\application\\valid_words.txt");
             file_scanner = new Scanner(obj_file);
             while (file_scanner.hasNextLine())
             {
@@ -56,12 +62,18 @@ public class WordleEventHandler implements ActionListener, KeyListener
         }
         catch (FileNotFoundException e)
         {
-            
+
         }
         finally
         {
             file_scanner.close();
         }
+
+
+        // determine the game objective
+        wordle = objective_list.get((int)(Math.random() * objective_list.size()));
+        System.out.println(wordle);
+
     }
 
     // method to handle submitted guesses from the user
@@ -75,7 +87,14 @@ public class WordleEventHandler implements ActionListener, KeyListener
 
             in.input_field.setText("");
             insertWord(guess);
+
+            // increment the number of guesses. if 5 guesses, end game
             nguess++;
+            if (nguess > 5)
+            {
+                game_state = false;
+            }
+
             // TODO: finish guess method
 
         }
@@ -160,13 +179,16 @@ public class WordleEventHandler implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent event)
     {
         // use getSource() to find out which object the action was from
-        makeGuess(in.input_field.getText());
+        if (game_state)
+        {
+            makeGuess(in.input_field.getText());
+        }
     }
     // action handlers for keyboard events to see when the user presses enter
     @Override
     public void keyPressed(KeyEvent event)
     {
-        if (event.getKeyCode() == 10)
+        if (event.getKeyCode() == 10 && game_state)
         {
             makeGuess(in.input_field.getText());
         }

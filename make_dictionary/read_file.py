@@ -28,7 +28,7 @@ def main():
                 is_valid = False
 
         if len(word) == 5 and is_valid:
-            text += word + '\n'
+            text += word.upper + '\n'
 
     # create a text file with the chosen words in it
     filtered_words = open("filtered_words.txt", "w")
