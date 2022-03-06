@@ -4,6 +4,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -11,6 +12,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 public class WordleEventHandler implements ActionListener, KeyListener
 {
@@ -32,8 +36,6 @@ public class WordleEventHandler implements ActionListener, KeyListener
 
         // take wordle object in to modify its components
         this.in = in;
-
-        System.out.println(new File(".").getAbsolutePath());
 
         // put each word from the objective_list in the src folder into an array
         try
@@ -72,7 +74,6 @@ public class WordleEventHandler implements ActionListener, KeyListener
 
         // determine the game objective
         wordle = objective_list.get((int)(Math.random() * objective_list.size()));
-        System.out.println(wordle);
 
     }
 
@@ -85,7 +86,35 @@ public class WordleEventHandler implements ActionListener, KeyListener
         if (isValidGuess(guess))
         {
 
+            // remove the guess from the input field
             in.input_field.setText("");
+
+            // iterate through guess and change appearence of letters according to 
+            // whether the letter is wrong, right, or partially right
+            // additionally increment an integer n every time a guess is correct.
+            // this gives win condition n=5
+            int n = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                incorrectLetter(nguess, i);
+                if (wordle.indexOf(guess.charAt(i)) > -1)
+                {
+                    partialLetter(nguess, i);
+                }
+                if (guess.charAt(i) == wordle.charAt(i))
+                {
+                    correctLetter(nguess, i);
+                    n++;
+                }
+
+            }
+            // win condition
+            if (n == 5)
+            {
+                game_state = false;
+            }
+
+            // put the guess into the grid
             insertWord(guess);
 
             // increment the number of guesses. if 5 guesses, end game
@@ -94,15 +123,43 @@ public class WordleEventHandler implements ActionListener, KeyListener
             {
                 game_state = false;
             }
-
-            // TODO: finish guess method
-
         }
         // if the guess isn't valid, tell the user 
         else
         {
             // TODO: let the user know that they're a dumbass when they try something invalid
         }
+
+    }
+
+    // method that makes a tile green for when a letter is completely right
+    public void correctLetter(int row, int column)
+    {
+
+        Border new_border = BorderFactory.createEmptyBorder();
+        in.grid[row][column].setBorder(new_border);
+        in.grid[row][column].setBackground(new Color(50, 204, 132));
+        in.grid[row][column].setForeground(new Color(255, 255, 255));
+
+    }
+    // method that makes a tile gray for when a letter is completely wrong
+    public void incorrectLetter(int row, int column)
+    {
+
+        Border new_border = BorderFactory.createEmptyBorder();
+        in.grid[row][column].setBorder(new_border);
+        in.grid[row][column].setBackground(new Color(150, 150, 150));
+        in.grid[row][column].setForeground(new Color(255, 255, 255));
+
+    }
+    // method that makes a tile yellow for when a letter is partially right
+    public void partialLetter(int row, int column)
+    {
+
+        Border new_border = BorderFactory.createEmptyBorder();
+        in.grid[row][column].setBorder(new_border);
+        in.grid[row][column].setBackground(new Color(220, 210, 125));
+        in.grid[row][column].setForeground(new Color(255, 255, 255));
 
     }
 
@@ -113,6 +170,7 @@ public class WordleEventHandler implements ActionListener, KeyListener
         // check if the length of the guess is 5 characters
         if (guess.length() != 5)
         {
+            System.out.println("length");
             return false;
         }
 
@@ -122,6 +180,7 @@ public class WordleEventHandler implements ActionListener, KeyListener
         {
             if (alphabet.indexOf(guess.charAt(i)) == -1)
             {
+                System.out.println("alphabet");
                 return false;
             }
         }
@@ -129,6 +188,7 @@ public class WordleEventHandler implements ActionListener, KeyListener
         // use a binary search to check if the guess is in the dictionary of 5 letter words
         if (!binarySearch(valid_words, guess))
         {
+            System.out.println("binary");
             return false;
         }
 
@@ -145,6 +205,8 @@ public class WordleEventHandler implements ActionListener, KeyListener
         {
             int m = l + (r - l) / 2;
             int res = x.compareTo(arr.get(m));
+
+            System.out.println(x + " " + arr.get(m) + " " + l + " " + r);
 
             // check if x is present at mid
             if (res == 0)

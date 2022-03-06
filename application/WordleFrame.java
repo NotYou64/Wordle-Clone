@@ -83,7 +83,7 @@ public class WordleFrame extends JFrame
         border0 = BorderFactory.createEmptyBorder(10, 0, 10, 0);
         border1 = BorderFactory.createEmptyBorder(10, dimensions.width/12, 5, dimensions.width/12);
         border2 = BorderFactory.createEmptyBorder(10, 0, 20, 0);
-        letter_border = BorderFactory.createLineBorder(new Color(150, 150, 150));
+        letter_border = BorderFactory.createLineBorder(new Color(200, 200, 200), 2);
         row0.setBorder(border0);
         row1.setBorder(border1);
         row2.setBorder(border2);
@@ -105,6 +105,8 @@ public class WordleFrame extends JFrame
             for (int j = 0; j < grid[0].length; j++)
             {
                 grid[i][j] = new JLabel();
+                grid[i][j].setOpaque(true);
+                grid[i][j].setBackground(new Color(255, 255, 255));
                 grid[i][j].setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
                 grid[i][j].setHorizontalAlignment(JLabel.CENTER);
                 grid[i][j].setBorder(letter_border);
@@ -130,7 +132,6 @@ public class WordleFrame extends JFrame
 
         // make the window visible
         setVisible(true);
-
 
     }
 
