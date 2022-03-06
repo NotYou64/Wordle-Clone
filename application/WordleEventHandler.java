@@ -16,9 +16,12 @@ public class WordleEventHandler implements ActionListener, KeyListener
 {
 
     WordleFrame in;
-    ArrayList<String> dict = new ArrayList<>();
-    Scanner dict_scanner;
-    File dict_file;
+    ArrayList<String> objective_list = new ArrayList<>();
+    ArrayList<String> valid_words = new ArrayList<>();
+    Scanner file_scanner;
+    File obj_file;
+
+    int nguess = 0;
 
     public WordleEventHandler(WordleFrame in)
     {
@@ -26,63 +29,152 @@ public class WordleEventHandler implements ActionListener, KeyListener
         // take wordle object in to modify its components
         this.in = in;
 
-        // put each word from the dictionary in the src file into an array
+        // put each word from the objective_list in the src file into an array
         try
         {
-            dict_file = new File(".\\src\\dictionary.txt");
-            dict_scanner = new Scanner(dict_file);
-            while (dict_scanner.hasNextLine())
+            obj_file = new File(".\\src\\objective_list.txt");
+            file_scanner = new Scanner(obj_file);
+            while (file_scanner.hasNextLine())
             {
-                dict.add(dict_scanner.nextLine());
+                objective_list.add(file_scanner.nextLine());
             }
         }
         catch (FileNotFoundException e)
         {
-            // ignore error
-            // TODO: decide if error should be dealt with
+            
+        }
+        
+        // put each word from the valid_words in the src file into an array
+        try
+        {
+            obj_file = new File(".\\src\\valid_words.txt");
+            file_scanner = new Scanner(obj_file);
+            while (file_scanner.hasNextLine())
+            {
+                valid_words.add(file_scanner.nextLine());
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            
         }
         finally
         {
-            dict_scanner.close();
+            file_scanner.close();
+        }
+    }
+
+    // method to handle submitted guesses from the user
+    public void makeGuess(String guess)
+    {
+        
+        // make the guess upper case and then check if it's valid
+        guess = guess.toUpperCase();
+        if (isValidGuess(guess))
+        {
+
+            in.input_field.setText("");
+            insertWord(guess);
+            nguess++;
+            // TODO: finish guess method
+
+        }
+        // if the guess isn't valid, tell the user 
+        else
+        {
+            // TODO: let the user know that they're a dumbass when they try something invalid
         }
 
+    }
+
+    // method that returns true if the guess is valid and false if it isn't
+    public boolean isValidGuess(String guess)
+    {
+
+        // check if the length of the guess is 5 characters
+        if (guess.length() != 5)
+        {
+            return false;
+        }
+
+        // check if the guess only has english letters in it (no special chars)
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (int i = 0; i < 5; i++)
+        {
+            if (alphabet.indexOf(guess.charAt(i)) == -1)
+            {
+                return false;
+            }
+        }
+
+        // use a binary search to check if the guess is in the dictionary of 5 letter words
+        if (!binarySearch(valid_words, guess))
+        {
+            return false;
+        }
+
+        // if all above conditions are true, the guess is valid
+        return true;
+
+    }
+
+    // binary search algorithm. returns true if element is in arraylist and -1 if not
+    boolean binarySearch(ArrayList<String> arr, String x)
+    {
+        int l = 0, r = arr.size() - 1;
+        while (l <= r) 
+        {
+            int m = l + (r - l) / 2;
+            int res = x.compareTo(arr.get(m));
+
+            // check if x is present at mid
+            if (res == 0)
+            {
+                return true;
+            }
+            // if x greater, ignore left half
+            if (res > 0)
+            {
+                l = m + 1;
+            }
+            // if x is smaller, ignore right half
+            else
+            {
+                r = m - 1;
+            }
+        }
+        return false;
+    }
+
+    // method to put a user guess into the guess grid
+    public void insertWord(String word)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            in.grid[nguess][i].setText(word.substring(i, i+1));
+        }
     }
 
     // action handler for the submit button
     @Override
     public void actionPerformed(ActionEvent event)
     {
-
         // use getSource() to find out which object the action was from
-        System.out.println("Button pressed");
-
+        makeGuess(in.input_field.getText());
     }
-
-
     // action handlers for keyboard events to see when the user presses enter
     @Override
     public void keyPressed(KeyEvent event)
     {
-
-        // use the getKeyChar() method to find out which key is pressed if it's a character
-        // if it's a space, enter, or something else like that, use getKeyCode()
-        // you can use getKeyText() to get "F1", "Home", or something like that as text
-
+        if (event.getKeyCode() == 10)
+        {
+            makeGuess(in.input_field.getText());
+        }
     }
     @Override
-    public void keyReleased(KeyEvent event)
-    {
-
-
-
-    }
+    public void keyReleased(KeyEvent event) {}
     @Override
-    public void keyTyped(KeyEvent event)
-    {
-
-
-
-    }
+    public void keyTyped(KeyEvent event) {}
 
 
 }

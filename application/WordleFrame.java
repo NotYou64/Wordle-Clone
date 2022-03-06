@@ -51,7 +51,7 @@ public class WordleFrame extends JFrame
     JLabel title = new JLabel();
 
     // middle jpanel: guess grid
-    JLabel[][] grid = new JLabel[5][6];
+    JLabel[][] grid = new JLabel[6][5];
 
     // bottom jpanel: inputs
     JTextField input_field = new JTextField(6);
